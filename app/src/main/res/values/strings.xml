@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">H071211045 - Final Mobile</string>
 
+    <!--  API  -->
+    <string name="api_key">507177fd828fa04e5e20f6852d0fda6b</string>
+    <string name="base_url">https://api.themoviedb.org/3/</string>
+
+    <!--  STRING  -->
     <string name="movies">Movies</string>
     <string name="tv_shows">TV Shows</string>
     <string name="favorites">Favorites</string>
