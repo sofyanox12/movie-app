@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Basic -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Blue -->
+    <color name="deepBlue">#042454</color>
+    <color name="moderateBlue">#374265</color>
+    <color name="lightBlue">#4f6aa5</color>
+
+    <!-- Wood -->
+    <color name="deepWood">#a65651</color>
+    <color name="moderateWood">#cdb7a0</color>
+    <color name="lightWood">#e4b8a1</color>
+
 </resources>
