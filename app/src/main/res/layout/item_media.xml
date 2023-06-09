@@ -45,7 +45,8 @@
             android:maxLines="1"
             android:ellipsize="end"
             android:gravity="center_horizontal"
-            android:text="[Release Date]"/>
+            android:text="[Release Date]"
+            android:textStyle="italic"/>
 
     </LinearLayout>
 
