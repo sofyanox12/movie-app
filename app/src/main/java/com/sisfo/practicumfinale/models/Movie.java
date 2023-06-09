@@ -18,6 +18,7 @@ public class Movie implements Parcelable {
     @SerializedName("overview") String overview;
     @SerializedName("vote_average") String voteAverage;
     @SerializedName("genre_ids") int[] genreIDs;
+    @SerializedName("vote_count") int voteCount;
 
     protected Movie(Parcel in) {
         apiID = in.readInt();
@@ -75,6 +76,10 @@ public class Movie implements Parcelable {
         return genreIDs;
     }
 
+    public int getVoteCount() {
+        return voteCount;
+    }
+
 
     @Override
     public int describeContents() {
@@ -91,6 +96,7 @@ public class Movie implements Parcelable {
         parcel.writeString(overview);
         parcel.writeString(voteAverage);
         parcel.writeIntArray(genreIDs);
+        parcel.writeInt(voteCount);
 
     }
 }

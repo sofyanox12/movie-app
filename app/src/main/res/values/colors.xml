@@ -5,6 +5,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="bone">#E6E6E6E6</color>
     <color name="dark">#D8272727</color>
+    <color name="darkGrey">#3D3D3D</color>
+    <color name="hyperDark">#00000000</color>
 
     <!-- Blue -->
     <color name="deepBlue">#042454</color>
@@ -15,5 +17,6 @@
     <color name="deepWood">#a65651</color>
     <color name="moderateWood">#cdb7a0</color>
     <color name="lightWood">#e4b8a1</color>
+    <color name="grey">#888888</color>
 
 </resources>

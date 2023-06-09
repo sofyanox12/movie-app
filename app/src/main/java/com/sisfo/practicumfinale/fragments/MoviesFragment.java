@@ -60,6 +60,7 @@ public class MoviesFragment extends Fragment {
                     MovieAdapter adapter = new MovieAdapter(response.body().getData());
                     adapter.setClickListener(movie -> toMedia(movie));
                     rvMovies.setAdapter(adapter);
+                    System.out.println(response.body().getData().get(0).getVoteAverage());
                     parent.stopLoading();
                 }
             }
