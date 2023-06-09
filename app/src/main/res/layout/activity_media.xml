@@ -20,7 +20,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -113,7 +112,6 @@
                                 android:textColor="@color/grey"
                                 android:textSize="11sp" />
 
-
                         </RelativeLayout>
 
                         <RelativeLayout
@@ -146,14 +144,18 @@
 
                 <ImageButton
                     android:id="@+id/btn_back"
-                    android:layout_width="52dp"
-                    android:layout_height="52dp"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:background="@android:color/transparent"
                     android:contentDescription="@string/content_back"
+                    android:background="@drawable/button_rounded"
+                    android:scaleType="centerCrop"
+                    android:padding="6dp"
                     android:src="@drawable/round_arrow_back_24"
-                    app:tint="@color/bone" />
+                    android:layout_margin="4dp"
+                    app:tint="@color/deepBlue"
+                    android:elevation="9dp" />
 
             </RelativeLayout>
 
