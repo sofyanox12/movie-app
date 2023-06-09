@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/nav_movies"
-        android:icon="@drawable/round_movie_24"
+        android:icon="@drawable/round_movie_border_24"
         android:title="@string/movies"/>
 
     <item android:id="@+id/nav_tv_shows"
@@ -12,7 +12,7 @@
         android:title="@string/tv_shows"/>
 
     <item android:id="@+id/nav_favorites"
-        android:icon="@drawable/round_favorite_border_24"
+        android:icon="@drawable/round_bookmark_border_24"
         android:title="@string/favorites"/>
 
 </menu>

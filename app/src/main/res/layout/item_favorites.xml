@@ -52,7 +52,7 @@
             android:layout_margin="8dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:src="@drawable/round_favorite_border_24"/>
+            android:src="@drawable/round_bookmark_border_24"/>
 
     </RelativeLayout>
 

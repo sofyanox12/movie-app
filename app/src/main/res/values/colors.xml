@@ -3,6 +3,8 @@
     <!-- Basic -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="bone">#E6E6E6E6</color>
+    <color name="dark">#D8272727</color>
 
     <!-- Blue -->
     <color name="deepBlue">#042454</color>
