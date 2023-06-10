@@ -17,6 +17,7 @@ import com.sisfo.practicumfinale.data.http.APIClient;
 import com.sisfo.practicumfinale.data.http.Response;
 import com.sisfo.practicumfinale.databinding.FragmentMoviesBinding;
 import com.sisfo.practicumfinale.models.Movie;
+import com.sisfo.practicumfinale.utils.Media;
 
 import java.util.List;
 
@@ -51,7 +52,7 @@ public class MoviesFragment extends Fragment {
     }
 
     private void fetchData(RecyclerView rvMovies) {
-        Call<Response<List<Movie>>> client = APIClient.service().getMovies( getString(R.string.api_key), "en-US");
+        Call<Response<List<Movie>>> client = APIClient.service().getMovies( getString(R.string.api_key), "en_US", 3);
 
         client.enqueue(new Callback<Response<List<Movie>>>() {
             @Override
@@ -74,7 +75,7 @@ public class MoviesFragment extends Fragment {
 
     private void toMedia(Movie movie) {
         Intent toDetail = new Intent(getActivity(), MediaActivity.class);
-        toDetail.putExtra("MEDIA", movie);
+        toDetail.putExtra(Media.MOVIE, movie);
         startActivity(toDetail);
     }
 }

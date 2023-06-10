@@ -21,6 +21,7 @@ import com.sisfo.practicumfinale.data.http.APIClient;
 import com.sisfo.practicumfinale.data.http.Response;
 import com.sisfo.practicumfinale.databinding.FragmentTVShowsBinding;
 import com.sisfo.practicumfinale.models.TVShow;
+import com.sisfo.practicumfinale.utils.Media;
 
 import java.util.List;
 
@@ -76,7 +77,7 @@ public class TVShowsFragment extends Fragment {
 
     private void toMedia(TVShow tvShow) {
         Intent intent = new Intent(getActivity(), MediaActivity.class);
-        intent.putExtra("MEDIA", tvShow);
+        intent.putExtra(Media.TV_SHOW, tvShow);
         startActivity(intent);
     }
 }

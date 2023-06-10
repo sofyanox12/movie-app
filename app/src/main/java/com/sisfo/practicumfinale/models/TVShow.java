@@ -11,12 +11,13 @@ public class TVShow implements Parcelable {
     // Response body
     @SerializedName("id") int apiID;
     @SerializedName("name") String name;
-    @SerializedName("first_air_date") String firstAirDate;
+    @SerializedName("first_air_date") String firstAirDate; // release date
     @SerializedName("poster_path") String posterPath;
     @SerializedName("backdrop_path") String backdropPath;
     @SerializedName("overview") String overview;
     @SerializedName("vote_average") String voteAverage;
     @SerializedName("genre_ids") int[] genreIDs;
+    @SerializedName("vote_count") int voteCount;
 
     protected TVShow(Parcel in) {
         apiID = in.readInt();
@@ -27,6 +28,7 @@ public class TVShow implements Parcelable {
         overview = in.readString();
         voteAverage = in.readString();
         genreIDs = in.createIntArray();
+        voteCount = in.readInt();
     }
 
     public static final Creator<TVShow> CREATOR = new Creator<TVShow>() {
@@ -74,6 +76,10 @@ public class TVShow implements Parcelable {
         return genreIDs;
     }
 
+    public int getVoteCount() {
+        return voteCount;
+    }
+
 
     @Override
     public int describeContents() {
@@ -90,5 +96,6 @@ public class TVShow implements Parcelable {
         parcel.writeString(overview);
         parcel.writeString(voteAverage);
         parcel.writeIntArray(genreIDs);
+        parcel.writeInt(voteCount);
     }
 }

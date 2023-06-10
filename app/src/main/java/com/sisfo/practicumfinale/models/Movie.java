@@ -13,8 +13,8 @@ public class Movie implements Parcelable {
     @SerializedName("id") int apiID;
     @SerializedName("title") String title;
     @SerializedName("release_date") String releaseDate;
-    @SerializedName("poster_path") String posterPath;
-    @SerializedName("backdrop_path") String backdropPath;
+    @SerializedName("poster_path") String posterPath; // poster
+    @SerializedName("backdrop_path") String backdropPath; // banner
     @SerializedName("overview") String overview;
     @SerializedName("vote_average") String voteAverage;
     @SerializedName("genre_ids") int[] genreIDs;
@@ -29,6 +29,7 @@ public class Movie implements Parcelable {
         overview = in.readString();
         voteAverage = in.readString();
         genreIDs = in.createIntArray();
+        voteCount = in.readInt();
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {

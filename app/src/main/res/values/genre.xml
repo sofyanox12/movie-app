@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="movie">
+        <item>28:Action</item>
+        <item>12:Adventure</item>
+        <item>16:Animation</item>
+        <item>35:Comedy</item>
+        <item>80:Crime</item>
+        <item>99:Documentary</item>
+        <item>18:Drama</item>
+        <item>10751:Family</item>
+        <item>14:Fantasy</item>
+        <item>36:History</item>
+        <item>27:Horror</item>
+        <item>10402:Music</item>
+        <item>9648:Mystery</item>
+        <item>10749:Romance</item>
+        <item>878:Science Fiction</item>
+        <item>10770:TV Movie</item>
+        <item>53:Thriller</item>
+        <item>10752:War</item>
+        <item>37:Western</item>
+    </string-array>
+
+    <string-array name="tv">
+        <item>10759:Action &amp; Adventures</item>
+        <item>16:Animation</item>
+        <item>35:Comedy</item>
+        <item>80:Crime</item>
+        <item>99:Documentary</item>
+        <item>18:Drama</item>
+        <item>10751:Family</item>
+        <item>10762:Kids</item>
+        <item>9648:Mystery</item>
+        <item>10763:News</item>
+        <item>10764:Reality</item>
+        <item>10765:Sci-Fi &amp; Fantasy</item>
+        <item>10766:Soap</item>
+        <item>10767:Talk</item>
+        <item>10768:War &amp; Politics</item>
+        <item>37:Western</item>
+    </string-array>
+</resources>
