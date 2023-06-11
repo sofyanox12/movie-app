@@ -22,9 +22,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         startFragment(new MoviesFragment());
         initiateBottomNavbar();
-
-
-
     }
 
     public void startLoading() {
@@ -54,14 +51,4 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
     }
-
-//    public ActivityResultLauncher<Intent> getResultLauncher() {
-//        return registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-//            if (result.getResultCode() == Media.RESULT_ADD) {
-//
-//            } else if (result.getResultCode() == Media.RESULT_DELETE) {
-//
-//            }
-//        });
-//    }
 }

@@ -10,7 +10,7 @@ import java.util.List;
 @Dao
 public interface RoomDao {
 
-    @Query("SELECT * FROM bookmark")
+    @Query("SELECT * FROM bookmark ORDER BY id DESC")
     List<Bookmark> getAll();
 
     @Query("SELECT * FROM bookmark WHERE api_id = :id")

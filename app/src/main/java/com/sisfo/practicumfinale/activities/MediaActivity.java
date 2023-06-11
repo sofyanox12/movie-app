@@ -2,6 +2,7 @@ package com.sisfo.practicumfinale.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.animation.Animator;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
@@ -42,7 +43,7 @@ public class MediaActivity extends AppCompatActivity {
         dbHelper = DatabaseHelper.getInstance(this);
 
         binding.btnBack.setOnClickListener(v -> finish());
-        binding.btnBookmark.setOnClickListener(v -> saveBookmark());
+        binding.btnBookmark.setOnClickListener(v -> toggleBookmark());
 
         setContentView(binding.getRoot());
         loadData();
@@ -66,6 +67,7 @@ public class MediaActivity extends AppCompatActivity {
                 if (!isBookmarked) {
                     if (movie != null) setMovie(movie, false);
                     else setTVShow(tvShow, false);
+                    bookmark = getBookmarkModel();
                     return;
                 }
 
@@ -159,18 +161,22 @@ public class MediaActivity extends AppCompatActivity {
             noOverview();
     }
 
-    private void saveBookmark() {
+    private void toggleBookmark() {
+        if (binding.lavTap.isAnimating())
+            return;
+
         if (isBookmarked) {
             isBookmarked = false;
-            dbHelper.roomDao().delete(bookmark);
             binding.btnBookmark.setImageResource(R.drawable.round_bookmark_border_24);
-        } else {
-            isBookmarked = true;
-            bookmark = getBookmarkModel();
-            binding.lavTap.playAnimation();
-            binding.btnBookmark.setImageResource(R.drawable.round_bookmark_24);
-            dbHelper.roomDao().insert(bookmark);
+            dbHelper.roomDao().delete(bookmark);
+            return;
         }
+
+        isBookmarked = true;
+        binding.btnBookmark.setImageResource(R.drawable.round_bookmark_24);
+        dbHelper.roomDao().insert(bookmark);
+        binding.lavTap.playAnimation();
+
     }
 
     private Bookmark getBookmarkModel() {
@@ -185,7 +191,7 @@ public class MediaActivity extends AppCompatActivity {
                     this.movie.getVoteAverage(),
                     Media.getFormattedGenres(this.movie.getGenreIDs()),
                     this.movie.getVoteCount(),
-                    "MOVIE"
+                    Media.MOVIE
             );
         } else {
             return new Bookmark(
@@ -198,7 +204,7 @@ public class MediaActivity extends AppCompatActivity {
                     this.tvShow.getVoteAverage(),
                     Media.getFormattedGenres(this.tvShow.getGenreIDs()),
                     this.tvShow.getVoteCount(),
-                    "TV_SHOW"
+                    Media.TV_SHOW
             );
         }
     }
@@ -210,7 +216,6 @@ public class MediaActivity extends AppCompatActivity {
     }
 
     private byte[] glideToByte(String url) {
-
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         Future<Bitmap> future = executorService.submit(() -> {
             try {
