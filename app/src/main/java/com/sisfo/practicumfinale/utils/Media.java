@@ -97,12 +97,14 @@ public class Media {
     }
 
     public static byte[] getBytes(Bitmap resource) {
+        if (resource == null) return null;
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         resource.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }
 
     public static Bitmap getBitmap(byte[] image) {
+        if (image == null) return null;
         return BitmapFactory.decodeByteArray(image, 0, image.length);
     }
 
