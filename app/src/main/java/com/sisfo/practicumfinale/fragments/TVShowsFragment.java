@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -30,7 +31,10 @@ import retrofit2.Callback;
 
 public class TVShowsFragment extends Fragment {
     private FragmentTVShowsBinding binding;
+    private TVShowAdapter adapter;
     private MainActivity parent;
+    private int page = 1;
+    private boolean isLoading = false;
     public TVShowsFragment() {}
 
     @Override
@@ -50,27 +54,52 @@ public class TVShowsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         binding = FragmentTVShowsBinding.bind(view);
         parent = (MainActivity) getActivity();
+        parent.setTitle(getString(R.string.tv_shows));
         parent.startLoading();
-        fetchData(binding.rvTvShows);
+
+        adapter = new TVShowAdapter();
+        adapter.setClickListener(this::toMedia);
+        binding.rvTvShows.setAdapter(adapter);
+
+        initInfiniteScrolling();
+        fetchData(page);
     }
-
-    private void fetchData(RecyclerView rvTVShow) {
-        Call<Response<List<TVShow>>> client = APIClient.service().getTVShows(getString(R.string.api_key), "en-US");
-
+    private void fetchData(int page) {
+        isLoading = true;
+        Call<Response<List<TVShow>>> client = APIClient.service().getTVShows(getString(R.string.api_key), "en-US", page);
         client.enqueue(new Callback<Response<List<TVShow>>>() {
             @Override
             public void onResponse(Call<Response<List<TVShow>>> call, retrofit2.Response<Response<List<TVShow>>> response) {
                 if (response.isSuccessful()) {
-                    TVShowAdapter adapter = new TVShowAdapter(response.body().getData());
-                    adapter.setClickListener(tvShow -> toMedia(tvShow));
-                    rvTVShow.setAdapter(adapter);
+                    adapter.addAll(response.body().getData());
+                    adapter.notifyItemRangeInserted(adapter.getItemCount() - 2 , response.body().getData().size());
                     parent.stopLoading();
+                    isLoading = false;
                 }
             }
 
             @Override
             public void onFailure(Call<Response<List<TVShow>>> call, Throwable t) {
-                Log.e("ERROR", t.getMessage());
+                parent.showError();
+                parent.stopLoading();
+                isLoading = false;
+            }
+        });
+    }
+
+
+    private void initInfiniteScrolling() {
+        binding.rvTvShows.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView rvTvShows, int dx, int dy) {
+                super.onScrolled(rvTvShows, dx, dy);
+                GridLayoutManager layoutManager = (GridLayoutManager) rvTvShows.getLayoutManager();
+                if (!isLoading) {
+                    if (layoutManager != null && layoutManager.findLastCompletelyVisibleItemPosition() == adapter.getItemCount() - 1) {
+                        page++;
+                        fetchData(page);
+                    }
+                }
             }
         });
     }

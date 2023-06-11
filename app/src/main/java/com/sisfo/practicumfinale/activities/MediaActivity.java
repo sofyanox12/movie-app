@@ -1,11 +1,11 @@
 package com.sisfo.practicumfinale.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.animation.Animator;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.sisfo.practicumfinale.R;
@@ -20,7 +20,6 @@ import com.sisfo.practicumfinale.utils.Media;
 import com.sisfo.practicumfinale.utils.MediaAsync;
 import com.sisfo.practicumfinale.utils.MediaCallback;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -34,6 +33,7 @@ public class MediaActivity extends AppCompatActivity {
     private TVShow tvShow;
     private Bookmark bookmark;
     private boolean isBookmarked;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +41,7 @@ public class MediaActivity extends AppCompatActivity {
         binding = ActivityMediaBinding.inflate(getLayoutInflater());
 
         dbHelper = DatabaseHelper.getInstance(this);
+        intent = new Intent();
 
         binding.btnBack.setOnClickListener(v -> finish());
         binding.btnBookmark.setOnClickListener(v -> toggleBookmark());
@@ -53,21 +54,27 @@ public class MediaActivity extends AppCompatActivity {
 
         new MediaAsync(this, new MediaCallback() {
             @Override
-            public void onPreExecute() {
+            public void onStart() {
                 preCheck(getIntent().getParcelableExtra(Media.MOVIE), getIntent().getParcelableExtra(Media.TV_SHOW));
+                binding.loadingOverlay.setVisibility(View.VISIBLE);
+                binding.progressBar.setVisibility(View.VISIBLE);
             }
 
             @Override
-            public void onLoad() {
+            public void onLoading() {
+                if (!isBookmarked)
+                    bookmark = getBookmarkModel();
 
             }
 
             @Override
-            public void onFinish() {
+            public void onSuccess() {
+                binding.loadingOverlay.setVisibility(View.GONE);
+                binding.progressBar.setVisibility(View.GONE);
+
                 if (!isBookmarked) {
                     if (movie != null) setMovie(movie, false);
                     else setTVShow(tvShow, false);
-                    bookmark = getBookmarkModel();
                     return;
                 }
 
@@ -88,7 +95,7 @@ public class MediaActivity extends AppCompatActivity {
 
     private void preCheck(Movie movie, TVShow tvShow) {
 
-        if (getIntent().getBooleanExtra(Media.BOOKMARK, false)) {
+        if (getIntent().getBooleanExtra(Media.BOOKMARKED, false)) {
             this.isBookmarked = true;
             this.movie = movie;
             this.tvShow = tvShow;
@@ -169,6 +176,9 @@ public class MediaActivity extends AppCompatActivity {
             isBookmarked = false;
             binding.btnBookmark.setImageResource(R.drawable.round_bookmark_border_24);
             dbHelper.roomDao().delete(bookmark);
+            intent.putExtra(Media.BOOKMARK_ID, getIntent().getIntExtra(Media.BOOKMARK_ID, 0));
+            intent.removeExtra(Media.BOOKMARK);
+            setResult(Media.RESULT_DELETE, intent);
             return;
         }
 
@@ -176,7 +186,9 @@ public class MediaActivity extends AppCompatActivity {
         binding.btnBookmark.setImageResource(R.drawable.round_bookmark_24);
         dbHelper.roomDao().insert(bookmark);
         binding.lavTap.playAnimation();
-
+        intent.removeExtra(Media.BOOKMARK_ID);
+        intent.putExtra(Media.BOOKMARK, bookmark);
+        setResult(Media.RESULT_ADD, intent);
     }
 
     private Bookmark getBookmarkModel() {

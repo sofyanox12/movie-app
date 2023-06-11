@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import java.lang.ref.WeakReference;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -18,16 +19,26 @@ public class MediaAsync {
     }
 
     public void execute() {
-        callback.get().onPreExecute();
+        callback.get().onStart();
 
         Executor executor = Executors.newSingleThreadExecutor();
-        Handler handler = new Handler(Looper.getMainLooper());
+        Handler handler = new Handler(Looper.myLooper());
         executor.execute(() -> {
-            callback.get().onLoad();
+            callback.get().onLoading();
             handler.post(() -> {
-                callback.get().onFinish();
+                callback.get().onSuccess();
             });
         });
+//        callback.get().onStart();
+//
+//        CompletableFuture.runAsync(() -> {
+//            callback.get().onLoading();
+//            // Perform asynchronous operations here
+//
+//        }).thenAcceptAsync((Void) -> {
+//            callback.get().onSuccess();
+//
+//        });
     }
 
 }

@@ -19,12 +19,15 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     private List<Movie> movies;
     private ClickListener listener;
 
-    public MovieAdapter(List<Movie> movies) {
-        this.movies = movies;
+    public MovieAdapter() {
+        this.movies = new ArrayList<>();
     }
 
     public void setClickListener(ClickListener listener) {
         this.listener = listener;
+    }
+    public void addAll(List<Movie> data) {
+        movies.addAll(data);
     }
 
     @NonNull
@@ -44,6 +47,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     public int getItemCount() {
         return movies.size();
     }
+
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ItemMediaBinding binding;

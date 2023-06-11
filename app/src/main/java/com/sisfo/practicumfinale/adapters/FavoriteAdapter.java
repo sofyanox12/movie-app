@@ -32,6 +32,17 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
         this.clickListener = clickListener;
     }
 
+    public void addBookmark(Bookmark bookmark) {
+        this.bookmarks.add(bookmark);
+        notifyItemInserted(this.bookmarks.size() - 1);
+    }
+
+    public void removeBookmark(int position) {
+        this.bookmarks.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, this.bookmarks.size());
+    }
+
     @NonNull
     @Override
     public FavoriteAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -41,9 +52,9 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull FavoriteAdapter.ViewHolder holder, int position) {
-        holder.onBind(bookmarks.get(position));
+        holder.onBind(bookmarks.get(position), position);
         holder.itemView.setOnClickListener(v -> {
-            clickListener.onClick(bookmarks.get(position));
+            clickListener.onClick(bookmarks.get(position), position);
         });
     }
 
@@ -59,7 +70,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
             this.binding = itemView;
         }
 
-        public void onBind(Bookmark bookmark) {
+        public void onBind(Bookmark bookmark, int position) {
             String[] date = bookmark.getReleaseDate().split("-");
             String formattedDate = date[2] + " " + Media.getMonth(date[1]) + " " + date[0];
             binding.tvTitle.setText(bookmark.getTitle());
@@ -79,6 +90,6 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
     }
 
     public interface ClickListener {
-        void onClick(Bookmark bookmark);
+        void onClick(Bookmark bookmark, int position);
     }
 }

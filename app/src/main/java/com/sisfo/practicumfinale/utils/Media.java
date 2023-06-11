@@ -14,6 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Media {
+    public static final String BOOKMARK_ID = "BOOKMARK_ID";
+    public static final String BOOKMARKED = "BOOKMARKED";
     public static String MOVIE = "MOVIE";
     public static String TV_SHOW = "TV_SHOW";
     public static String BOOKMARK = "BOOKMARK";

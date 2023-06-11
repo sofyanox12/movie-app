@@ -19,9 +19,28 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
+
+        binding.btnReload.setOnClickListener(v -> {
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fl_main);
+            if (fragment instanceof MoviesFragment)
+                startFragment(new MoviesFragment());
+            else
+                startFragment(new TVShowsFragment());
+
+            hideError();
+        });
+
         setContentView(binding.getRoot());
         startFragment(new MoviesFragment());
         initiateBottomNavbar();
+    }
+
+    public void showError() {
+        binding.llError.setVisibility(View.VISIBLE);
+    }
+
+    public void hideError() {
+        binding.llError.setVisibility(View.GONE);
     }
 
     public void startLoading() {
@@ -30,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void stopLoading() {
         binding.progressBar.setVisibility(View.GONE);
+    }
+
+    public void setTitle(String title) {
+        binding.tvTitle.setText(title);
     }
 
     private void startFragment(Fragment fragment) {

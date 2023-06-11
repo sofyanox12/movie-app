@@ -11,16 +11,21 @@ import com.bumptech.glide.Glide;
 import com.sisfo.practicumfinale.databinding.ItemMediaBinding;
 import com.sisfo.practicumfinale.models.TVShow;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TVShowAdapter extends RecyclerView.Adapter<TVShowAdapter.ViewHolder>{
     private List<TVShow> tvShows;
     private ClickListener listener;
-    public TVShowAdapter(List<TVShow> tvShows) {
-        this.tvShows = tvShows;
+    public TVShowAdapter() {
+        this.tvShows = new ArrayList<>();
     }
     public void setClickListener(ClickListener listener) {
         this.listener = listener;
+    }
+
+    public void addAll(List<TVShow> data) {
+        tvShows.addAll(data);
     }
 
     @NonNull
