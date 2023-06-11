@@ -29,16 +29,6 @@ public class MediaAsync {
                 callback.get().onSuccess();
             });
         });
-//        callback.get().onStart();
-//
-//        CompletableFuture.runAsync(() -> {
-//            callback.get().onLoading();
-//            // Perform asynchronous operations here
-//
-//        }).thenAcceptAsync((Void) -> {
-//            callback.get().onSuccess();
-//
-//        });
     }
 
 }

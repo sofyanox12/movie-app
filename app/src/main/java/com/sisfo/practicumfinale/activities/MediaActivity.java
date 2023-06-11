@@ -184,7 +184,8 @@ public class MediaActivity extends AppCompatActivity {
 
         isBookmarked = true;
         binding.btnBookmark.setImageResource(R.drawable.round_bookmark_24);
-        dbHelper.roomDao().insert(bookmark);
+        if (dbHelper.roomDao().getByApiID(bookmark.getApiID()) == null)
+            dbHelper.roomDao().insert(bookmark);
         binding.lavTap.playAnimation();
         intent.removeExtra(Media.BOOKMARK_ID);
         intent.putExtra(Media.BOOKMARK, bookmark);
@@ -243,7 +244,6 @@ public class MediaActivity extends AppCompatActivity {
         });
 
         try {
-            System.out.println("glideToByte: " + future.get());
             return Media.getBytes(future.get());
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);

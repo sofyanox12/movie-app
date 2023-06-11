@@ -1,7 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
     <style name="Base.Theme.H071211045FinalMobile" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
         <item name="colorPrimary">@color/deepBlue</item>
         <item name="colorPrimaryVariant">@color/moderateBlue</item>
@@ -10,6 +8,9 @@
         <item name="colorSecondary">@color/deepWood</item>
         <item name="colorSecondaryVariant">@color/moderateWood</item>
         <item name="colorOnSecondary">@color/white</item>
+
+        <item name="android:splitMotionEvents">false</item>
+        <item name="android:windowEnableSplitTouch">false</item>
 
     </style>
 

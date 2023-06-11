@@ -93,7 +93,6 @@ public class Media {
         for (int i = 0; i < genres.length; i++) {
             formattedGenres[i] = Integer.parseInt(genres[i].trim());
         }
-        System.out.println(Arrays.toString(formattedGenres));
         return formattedGenres;
     }
 
@@ -104,9 +103,7 @@ public class Media {
     }
 
     public static Bitmap getBitmap(byte[] image) {
-        Bitmap bitmap = BitmapFactory.decodeByteArray(image, 0, image.length);
-
-        return bitmap;
+        return BitmapFactory.decodeByteArray(image, 0, image.length);
     }
 
     public static void placeImage(Context context, String path, ImageView imageView) {
