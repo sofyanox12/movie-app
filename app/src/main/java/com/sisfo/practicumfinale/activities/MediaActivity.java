@@ -169,8 +169,11 @@ public class MediaActivity extends AppCompatActivity {
     }
 
     private void toggleBookmark() {
-        if (binding.lavTap.isAnimating())
+        if (binding.lavTap.isAnimating()) {
+            setResult(Media.RESULT_DELETE, null);
+            setResult(Media.RESULT_ADD, null);
             return;
+        }
 
         if (isBookmarked) {
             isBookmarked = false;
@@ -182,14 +185,16 @@ public class MediaActivity extends AppCompatActivity {
             return;
         }
 
-        isBookmarked = true;
-        binding.btnBookmark.setImageResource(R.drawable.round_bookmark_24);
-        if (dbHelper.roomDao().getByApiID(bookmark.getApiID()) == null)
+        if (dbHelper.roomDao().getByApiID(bookmark.getApiID()) == null) {
+            isBookmarked = true;
             dbHelper.roomDao().insert(bookmark);
-        binding.lavTap.playAnimation();
-        intent.removeExtra(Media.BOOKMARK_ID);
-        intent.putExtra(Media.BOOKMARK, bookmark);
-        setResult(Media.RESULT_ADD, intent);
+            binding.btnBookmark.setImageResource(R.drawable.round_bookmark_24);
+            binding.lavTap.playAnimation();
+            intent.removeExtra(Media.BOOKMARK_ID);
+            intent.putExtra(Media.BOOKMARK, bookmark);
+            setResult(Media.RESULT_ADD, intent);
+        }
+
     }
 
     private Bookmark getBookmarkModel() {
