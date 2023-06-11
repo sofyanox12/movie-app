@@ -185,11 +185,12 @@ public class MediaActivity extends AppCompatActivity {
             return;
         }
 
+        isBookmarked = true;
+        binding.btnBookmark.setImageResource(R.drawable.round_bookmark_24);
+        binding.lavTap.playAnimation();
+
         if (dbHelper.roomDao().getByApiID(bookmark.getApiID()) == null) {
-            isBookmarked = true;
             dbHelper.roomDao().insert(bookmark);
-            binding.btnBookmark.setImageResource(R.drawable.round_bookmark_24);
-            binding.lavTap.playAnimation();
             intent.removeExtra(Media.BOOKMARK_ID);
             intent.putExtra(Media.BOOKMARK, bookmark);
             setResult(Media.RESULT_ADD, intent);
