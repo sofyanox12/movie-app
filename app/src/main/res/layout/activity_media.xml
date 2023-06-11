@@ -36,6 +36,11 @@
                     android:foreground="@drawable/image_overlay"
                     android:scaleType="centerCrop" />
 
+                <ProgressBar
+                    android:id="@+id/progress_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="256dp"/>
+
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -77,7 +82,7 @@
                                     android:id="@+id/tv_rating"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="8.5"
+                                    android:text="0"
                                     android:textSize="16sp"
                                     android:textStyle="bold" />
 
@@ -110,7 +115,6 @@
                                 android:layout_width="32dp"
                                 android:layout_height="32dp"
                                 android:layout_centerHorizontal="true"
-                                android:src="@drawable/round_movie_border_24"
                                 app:tint="@color/darkGrey" />
 
                             <TextView
@@ -119,7 +123,6 @@
                                 android:layout_height="wrap_content"
                                 android:layout_below="@id/iv_type"
                                 android:layout_centerHorizontal="true"
-                                android:text="Movie"
                                 android:textStyle="bold" />
 
                         </RelativeLayout>
@@ -172,7 +175,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
-                        android:text="Title"
                         android:textColor="@color/black"
                         android:textSize="24sp"
                         android:textStyle="bold" />
@@ -181,8 +183,7 @@
                         android:id="@+id/tv_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
-                        android:text="May 04, 2023" />
+                        android:layout_marginStart="4dp"/>
 
                     <HorizontalScrollView
                         android:layout_width="match_parent"
@@ -226,7 +227,6 @@
                 android:layout_marginTop="8dp"
                 android:lineSpacingExtra="2sp"
                 android:lineSpacingMultiplier="1.25"
-                android:text="@string/lorem30"
                 android:textSize="15sp"
                 android:layout_marginBottom="12dp"/>
 
@@ -240,7 +240,6 @@
                 app:lottie_loop="true"
                 android:scaleType="fitXY"
                 android:visibility="gone"/>
-
 
         </LinearLayout>
 

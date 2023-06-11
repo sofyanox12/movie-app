@@ -53,7 +53,6 @@ public class MoviesFragment extends Fragment {
 
     private void fetchData(RecyclerView rvMovies) {
         Call<Response<List<Movie>>> client = APIClient.service().getMovies( getString(R.string.api_key), "en_US", 3);
-
         client.enqueue(new Callback<Response<List<Movie>>>() {
             @Override
             public void onResponse(Call<Response<List<Movie>>> call, retrofit2.Response<Response<List<Movie>>> response) {
@@ -61,7 +60,6 @@ public class MoviesFragment extends Fragment {
                     MovieAdapter adapter = new MovieAdapter(response.body().getData());
                     adapter.setClickListener(movie -> toMedia(movie));
                     rvMovies.setAdapter(adapter);
-                    System.out.println(response.body().getData().get(0).getVoteAverage());
                     parent.stopLoading();
                 }
             }

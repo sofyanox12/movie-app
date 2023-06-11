@@ -20,6 +20,18 @@ public class Movie implements Parcelable {
     @SerializedName("genre_ids") int[] genreIDs;
     @SerializedName("vote_count") int voteCount;
 
+    public Movie(int apiID, String title, String releaseDate, String posterPath, String backdropPath, String overview, String voteAverage, int[] genreIDs, int voteCount) {
+        this.apiID = apiID;
+        this.title = title;
+        this.releaseDate = releaseDate;
+        this.posterPath = posterPath;
+        this.backdropPath = backdropPath;
+        this.overview = overview;
+        this.voteAverage = voteAverage;
+        this.genreIDs = genreIDs;
+        this.voteCount = voteCount;
+    }
+
     protected Movie(Parcel in) {
         apiID = in.readInt();
         title = in.readString();

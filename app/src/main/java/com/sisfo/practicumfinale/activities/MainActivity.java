@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 
 import com.sisfo.practicumfinale.R;
 import com.sisfo.practicumfinale.databinding.ActivityMainBinding;
+import com.sisfo.practicumfinale.fragments.FavoritesFragment;
 import com.sisfo.practicumfinale.fragments.MoviesFragment;
 import com.sisfo.practicumfinale.fragments.TVShowsFragment;
 
@@ -47,11 +48,20 @@ public class MainActivity extends AppCompatActivity {
                 startFragment(new MoviesFragment());
             else if (item.getItemId() == R.id.nav_tv_shows)
                 startFragment(new TVShowsFragment());
-//            else if (item.getItemId() == R.id.nav_favorites)
-//                startFragment(new MoviesFragment());
-//
+            else if (item.getItemId() == R.id.nav_favorites)
+                startFragment(new FavoritesFragment());
+
             return true;
         });
     }
 
+//    public ActivityResultLauncher<Intent> getResultLauncher() {
+//        return registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+//            if (result.getResultCode() == Media.RESULT_ADD) {
+//
+//            } else if (result.getResultCode() == Media.RESULT_DELETE) {
+//
+//            }
+//        });
+//    }
 }

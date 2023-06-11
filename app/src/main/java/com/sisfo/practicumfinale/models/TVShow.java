@@ -19,6 +19,18 @@ public class TVShow implements Parcelable {
     @SerializedName("genre_ids") int[] genreIDs;
     @SerializedName("vote_count") int voteCount;
 
+    public TVShow(int apiID, String name, String firstAirDate, String posterPath, String backdropPath, String overview, String voteAverage, int[] genreIDs, int voteCount) {
+        this.apiID = apiID;
+        this.name = name;
+        this.firstAirDate = firstAirDate;
+        this.posterPath = posterPath;
+        this.backdropPath = backdropPath;
+        this.overview = overview;
+        this.voteAverage = voteAverage;
+        this.genreIDs = genreIDs;
+        this.voteCount = voteCount;
+    }
+
     protected TVShow(Parcel in) {
         apiID = in.readInt();
         name = in.readString();

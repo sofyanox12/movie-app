@@ -2,50 +2,120 @@ package com.sisfo.practicumfinale.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.sisfo.practicumfinale.R;
 import com.sisfo.practicumfinale.adapters.GenreAdapter;
+import com.sisfo.practicumfinale.data.local.Bookmark;
+import com.sisfo.practicumfinale.data.local.DatabaseHelper;
 import com.sisfo.practicumfinale.databinding.ActivityMediaBinding;
 import com.sisfo.practicumfinale.models.Genre;
 import com.sisfo.practicumfinale.models.Movie;
 import com.sisfo.practicumfinale.models.TVShow;
 import com.sisfo.practicumfinale.utils.Media;
+import com.sisfo.practicumfinale.utils.MediaAsync;
+import com.sisfo.practicumfinale.utils.MediaCallback;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class MediaActivity extends AppCompatActivity {
     private ActivityMediaBinding binding;
+    private DatabaseHelper dbHelper;
     private Movie movie;
     private TVShow tvShow;
-    private boolean isBookmarked = false;
+    private Bookmark bookmark;
+    private boolean isBookmarked;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMediaBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-        takeMedia(this.movie, this.tvShow);
+
+        dbHelper = DatabaseHelper.getInstance(this);
 
         binding.btnBack.setOnClickListener(v -> finish());
-        binding.btnBookmark.setOnClickListener(v -> {
-            if (isBookmarked) {
-                binding.btnBookmark.setImageResource(R.drawable.round_bookmark_border_24);
-                isBookmarked = false;
-            } else {
-                binding.lavTap.playAnimation();
-                binding.btnBookmark.setImageResource(R.drawable.round_bookmark_24);
-                isBookmarked = true;
-            }
-        });
+        binding.btnBookmark.setOnClickListener(v -> saveBookmark());
 
-
+        setContentView(binding.getRoot());
+        loadData();
     }
 
-    private void setMovie(Movie movie) {
-        List<Genre> genres = getGenre(getResources().getStringArray(R.array.movie), movie.getGenreIDs());
+    private void loadData() {
+
+        new MediaAsync(this, new MediaCallback() {
+            @Override
+            public void onPreExecute() {
+                preCheck(getIntent().getParcelableExtra(Media.MOVIE), getIntent().getParcelableExtra(Media.TV_SHOW));
+            }
+
+            @Override
+            public void onLoad() {
+
+            }
+
+            @Override
+            public void onFinish() {
+                if (!isBookmarked) {
+                    if (movie != null) setMovie(movie, false);
+                    else setTVShow(tvShow, false);
+                    return;
+                }
+
+                binding.btnBookmark.setImageResource(R.drawable.round_bookmark_24);
+                if (movie != null) {
+                    bookmark = dbHelper.roomDao().getByApiID(movie.getApiID());
+                    setMovie(movie, isBookmarked);
+                    getBookmarkImages(bookmark);
+                } else {
+                    bookmark = dbHelper.roomDao().getByApiID(tvShow.getApiID());
+                    setTVShow(tvShow, isBookmarked);
+                    getBookmarkImages(bookmark);
+                }
+            }
+
+        }).execute();
+    }
+
+    private void preCheck(Movie movie, TVShow tvShow) {
+
+        if (getIntent().getBooleanExtra(Media.BOOKMARK, false)) {
+            this.isBookmarked = true;
+            this.movie = movie;
+            this.tvShow = tvShow;
+            return;
+        }
+
+        if (movie != null) {
+            this.movie = movie;
+            this.isBookmarked = dbHelper.roomDao().getByApiID(movie.getApiID()) != null;
+        } else {
+            this.tvShow = tvShow;
+            this.isBookmarked = dbHelper.roomDao().getByApiID(tvShow.getApiID()) != null;
+        }
+    }
+
+    private void getBookmarkImages(Bookmark bookmark) {
+        Glide.with(this)
+                .asBitmap()
+                .load(Media.getBitmap(bookmark.getPosterPath()))
+                .into(binding.ivPoster);
+
+        Glide.with(this)
+                .asBitmap()
+                .load(Media.getBitmap(bookmark.getBackdropPath()))
+                .into(binding.ivBanner);
+    }
+
+    private void setMovie(Movie movie, boolean fromBookmark) {
+        List<Genre> genres = Media.getGenre(getResources().getStringArray(R.array.movie), movie.getGenreIDs());
         String[] date = movie.getReleaseDate().split("-");
         String formattedDate = date[2] + " " + Media.getMonth(date[1]) + " " + date[0];
 
@@ -56,27 +126,19 @@ public class MediaActivity extends AppCompatActivity {
         binding.tvDate.setText(formattedDate);
         binding.tvType.setText("Movie");
         binding.tvRatingCount.setText(String.valueOf(movie.getVoteCount()));
-
-        Glide.with(this)
-                .load("https://image.tmdb.org/t/p/w500" + movie.getPosterPath())
-                .into(binding.ivPoster);
-
-        Glide.with(this)
-                .load("https://image.tmdb.org/t/p/w500" + movie.getBackdropPath())
-                .into(binding.ivBanner);
-
         binding.ivType.setImageResource(R.drawable.round_movie_24);
 
-
+        if (!fromBookmark) {
+            Media.placeImage(this, movie.getPosterPath(), binding.ivPoster);
+            Media.placeImage(this, movie.getBackdropPath(), binding.ivBanner);
+        }
 
         if (movie.getOverview().isEmpty())
             noOverview();
-
     }
 
-
-    private void setTVShow(TVShow tvShow) {
-        List<Genre> genres = getGenre(getResources().getStringArray(R.array.tv), tvShow.getGenreIDs());
+    private void setTVShow(TVShow tvShow, boolean fromBookmark) {
+        List<Genre> genres = Media.getGenre(getResources().getStringArray(R.array.tv), tvShow.getGenreIDs());
         String[] date = tvShow.getFirstAirDate().split("-");
         String formattedDate = date[2] + " " + Media.getMonth(date[1]) + " " + date[0];
         binding.rvGenres.setAdapter(new GenreAdapter(genres));
@@ -86,41 +148,59 @@ public class MediaActivity extends AppCompatActivity {
         binding.tvDate.setText(formattedDate);
         binding.tvType.setText("TV Show");
         binding.tvRatingCount.setText(String.valueOf(tvShow.getVoteCount()));
-
-        Glide.with(this)
-                .load("https://image.tmdb.org/t/p/w500" + tvShow.getPosterPath())
-                .into(binding.ivPoster);
-
-        Glide.with(this)
-                .load("https://image.tmdb.org/t/p/w500" + tvShow.getBackdropPath())
-                .into(binding.ivBanner);
-
         binding.ivType.setImageResource(R.drawable.round_tv_24);
+
+        if (!fromBookmark) {
+            Media.placeImage(this, tvShow.getPosterPath(), binding.ivPoster);
+            Media.placeImage(this, tvShow.getBackdropPath(), binding.ivBanner);
+        }
 
         if (tvShow.getOverview().isEmpty())
             noOverview();
     }
 
-    private void takeMedia(Movie movie, TVShow tvShow) {
-        movie = getIntent().getParcelableExtra(Media.MOVIE);
-        if (movie == null) {
-            tvShow = getIntent().getParcelableExtra(Media.TV_SHOW);
-            setTVShow(tvShow);
+    private void saveBookmark() {
+        if (isBookmarked) {
+            isBookmarked = false;
+            dbHelper.roomDao().delete(bookmark);
+            binding.btnBookmark.setImageResource(R.drawable.round_bookmark_border_24);
         } else {
-            setMovie(movie);
+            isBookmarked = true;
+            bookmark = getBookmarkModel();
+            binding.lavTap.playAnimation();
+            binding.btnBookmark.setImageResource(R.drawable.round_bookmark_24);
+            dbHelper.roomDao().insert(bookmark);
         }
     }
 
-    private List<Genre> getGenre(String[] rawGenres, int[] genresMatchID) {
-        List<Genre> genres = new ArrayList<>();
-        for (int j : genresMatchID) {
-            for (String mediaGenre : rawGenres) {
-                String[] split = mediaGenre.split(":");
-                if (split[0].equals(String.valueOf(j)))
-                    genres.add(new Genre(Integer.parseInt(split[0]), split[1]));
-            }
+    private Bookmark getBookmarkModel() {
+        if (this.movie != null) {
+            return new Bookmark(
+                    this.movie.getApiID(),
+                    this.movie.getTitle(),
+                    this.movie.getReleaseDate(),
+                    this.glideToByte(this.movie.getPosterPath()),
+                    this.glideToByte(this.movie.getBackdropPath()),
+                    this.movie.getOverview(),
+                    this.movie.getVoteAverage(),
+                    Media.getFormattedGenres(this.movie.getGenreIDs()),
+                    this.movie.getVoteCount(),
+                    "MOVIE"
+            );
+        } else {
+            return new Bookmark(
+                    this.tvShow.getApiID(),
+                    this.tvShow.getName(),
+                    this.tvShow.getFirstAirDate(),
+                    this.glideToByte(this.tvShow.getPosterPath()),
+                    this.glideToByte(this.tvShow.getBackdropPath()),
+                    this.tvShow.getOverview(),
+                    this.tvShow.getVoteAverage(),
+                    Media.getFormattedGenres(this.tvShow.getGenreIDs()),
+                    this.tvShow.getVoteCount(),
+                    "TV_SHOW"
+            );
         }
-        return genres;
     }
 
     private void noOverview() {
@@ -129,6 +209,27 @@ public class MediaActivity extends AppCompatActivity {
         binding.lavHand.setVisibility(View.VISIBLE);
     }
 
+    private byte[] glideToByte(String url) {
 
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        Future<Bitmap> future = executorService.submit(() -> {
+            try {
+                return Glide.with(this)
+                        .asBitmap()
+                        .load("https://image.tmdb.org/t/p/w500" + url)
+                        .submit()
+                        .get();
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
+            return null;
+        });
 
+        try {
+            System.out.println("glideToByte: " + future.get());
+            return Media.getBytes(future.get());
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
