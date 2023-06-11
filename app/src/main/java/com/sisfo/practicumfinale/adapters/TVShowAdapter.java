@@ -55,8 +55,12 @@ public class TVShowAdapter extends RecyclerView.Adapter<TVShowAdapter.ViewHolder
 
         public void onBind(TVShow tvShow) {
             binding.tvTitle.setText(tvShow.getName());
-            binding.tvReleaseDate.setText(tvShow.getFirstAirDate().substring(0, 4));
-            Glide.with(itemView.getContext())
+            if (tvShow.getFirstAirDate() != null)
+                if (tvShow.getFirstAirDate().length() > 4)
+                    binding.tvReleaseDate.setText(tvShow.getFirstAirDate().substring(0, 4));
+
+            if (tvShow.getPosterPath() != null)
+                Glide.with(itemView.getContext())
                     .load("https://image.tmdb.org/t/p/w500" + tvShow.getPosterPath())
                     .into(binding.ivPreview);
         }

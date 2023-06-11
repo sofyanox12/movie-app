@@ -59,8 +59,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
         public void onBind(Movie movie) {
             binding.tvTitle.setText(movie.getTitle());
-            binding.tvReleaseDate.setText(movie.getReleaseDate().substring(0, 4));
-            Glide.with(itemView.getContext())
+            if (movie.getReleaseDate() != null)
+                if (movie.getReleaseDate().length() > 4)
+                    binding.tvReleaseDate.setText(movie.getReleaseDate().substring(0, 4));
+
+            if (movie.getPosterPath() != null)
+                Glide.with(itemView.getContext())
                     .load("https://image.tmdb.org/t/p/w500" + movie.getPosterPath())
                     .into(binding.ivPreview);
         }
